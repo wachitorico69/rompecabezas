@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap" rel="stylesheet">
+    <title>Rompecabezas Drag and Drop</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: "Inconsolata", serif;
+            text-align: center;
+            background-color: #FDB927;;
+        }
+        h2, h3 {
+            background-color: #552583;
+        }
+        p {
+            margin-top: 1em;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .board, .pieces {
+            display: grid;
+            grid-template-columns: repeat(2, 200px);
+            grid-template-rows: repeat(2, 200px);
+            gap: 5px;
+            padding: 10px;
+            border: 2px solid black;
+        }
+        .piece {
+            width: 200px;
+            height: 200px;
+            background-size: cover;
+            cursor: grab;
+        }
+        .dropzone {
+            width: 200px;
+            height: 200px;
+            border: 2px dashed gray;
+        }
+        img{
+            width: 200px;
+            height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Rompecabezas Drag and Drop</h2>
+    <h3>Dario Miguel Moreno González</h3>
+    <p>Arrastra las piezas a su posición correcta.</p>
+    <div class="container">
+        <div class="pieces">
+            <div class="piece" id="p1" draggable="true" >
+                <img src="puzzle1.jpg" alt="">
+            </div>
+            <div class="piece" id="p2" draggable="true"  ">
+                <img src="puzzle2.jpg" alt="">
+            </div>
+            <div class="piece" id="p3" draggable="true"  ">
+                <img src="puzzle3.jpg" alt="">
+            </div>
+            <div class="piece" id="p4" draggable="true"  ">
+                <img src="puzzle4.jpg" alt="">
+            </div>
+        </div>
+        <div class="board">
+            <div class="dropzone" data-id="p1"></div>
+            <div class="dropzone" data-id="p2"></div>
+            <div class="dropzone" data-id="p3"></div>
+            <div class="dropzone" data-id="p4"></div>
+        </div>
+    </div>
+    <p id="mensaje"></p>
+
+    <script>
+        const piezas = document.querySelectorAll('.piece');
+        const zonas = document.querySelectorAll('.dropzone');
+        let colocadas = 0;
+
+        piezas.forEach(pieza => {
+            pieza.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('id', pieza.id);
+            });
+        });
+
+        zonas.forEach(zona => {
+            zona.addEventListener('dragover', (e) => {
+                e.preventDefault();
+            });
+
+            zona.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const id = e.dataTransfer.getData('id');
+                const pieza = document.getElementById(id);
+
+                if (zona.children.length === 0 && id === zona.dataset.id) {
+                    zona.appendChild(pieza);
+                    pieza.style.cursor = 'default';
+                    pieza.draggable = false;
+                    colocadas++;
+                }
+
+                if (colocadas === 4) {
+                    document.getElementById('mensaje').textContent = '¡Rompecabezas completado!';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
