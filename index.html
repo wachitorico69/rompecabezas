@@ -17,8 +17,10 @@
             text-align: center;
             background-color: #FDB927;;
         }
-        h2, h3 {
+        header {
             background-color: #552583;
+            color: white;
+            padding: .5em;
         }
         p {
             margin-top: 1em;
@@ -55,8 +57,11 @@
     </style>
 </head>
 <body>
-    <h2>Rompecabezas Drag and Drop</h2>
-    <h3>Dario Miguel Moreno González</h3>
+    <header>
+        <h2>Rompecabezas Drag and Drop</h2>
+        <br>
+        <h2>Dario Miguel Moreno González</h2>
+    </header>
     <p>Arrastra las piezas a su posición correcta.</p>
     <div class="container">
         <div class="pieces">
@@ -83,35 +88,35 @@
     <p id="mensaje"></p>
 
     <script>
-        const piezas = document.querySelectorAll('.piece');
-        const zonas = document.querySelectorAll('.dropzone');
-        let colocadas = 0;
+        const piezas = document.querySelectorAll('.piece');  //guarda en un array todas las piezas
+        const zonas = document.querySelectorAll('.dropzone'); //guarda en un array todas las zonas del rompecabezas
+        let colocadas = 0; //contador para las piezas que han sido colocadas
 
-        piezas.forEach(pieza => {
-            pieza.addEventListener('dragstart', (e) => {
-                e.dataTransfer.setData('id', pieza.id);
+        piezas.forEach(pieza => { //recorre el array de piezas
+            pieza.addEventListener('dragstart', (e) => { //añade el evento de inicio de arrastre a cada pieza
+                e.dataTransfer.setData('id', pieza.id); //añade el id de las piezas al objeto DataTransfer
             });
         });
 
-        zonas.forEach(zona => {
-            zona.addEventListener('dragover', (e) => {
-                e.preventDefault();
+        zonas.forEach(zona => { //recorre el array de zonas
+            zona.addEventListener('dragover', (e) => { //añade el evento dragover (se activa cuando una pieza esta sobre la zona) a cada zona
+                e.preventDefault(); //cancela el evento
             });
 
-            zona.addEventListener('drop', (e) => {
-                e.preventDefault();
-                const id = e.dataTransfer.getData('id');
-                const pieza = document.getElementById(id);
+            zona.addEventListener('drop', (e) => { //añade el evento drop (se activa cuando se deja caer una pieza) a cada zona
+                e.preventDefault(); //cancela el evento
+                const id = e.dataTransfer.getData('id');  //recupera el id de la pieza guardado en el objeto dataTransfer
+                const pieza = document.getElementById(id); //guarda el id recuperado
 
-                if (zona.children.length === 0 && id === zona.dataset.id) {
-                    zona.appendChild(pieza);
-                    pieza.style.cursor = 'default';
-                    pieza.draggable = false;
-                    colocadas++;
+                if (zona.children.length === 0 && id === zona.dataset.id) { //si la zona no tiene hijos y el id de la pieza es igual al de la zona
+                    zona.appendChild(pieza); //coloca la pieza en el lugar de la zona
+                    pieza.style.cursor = 'default'; //cambia el cursor al predeterminado para hacer claro que no se puede mover más la pieza
+                    pieza.draggable = false; //la pieza ya no se puede mover una vez colocada en su posición correcta
+                    colocadas++; //aumenta en uno el contador de piezas colocadas en el rompecabezas
                 }
 
-                if (colocadas === 4) {
-                    document.getElementById('mensaje').textContent = '¡Rompecabezas completado!';
+                if (colocadas === 4) { //verifica si el número de piezas colocadas es 4 (las piezas totales)
+                    document.getElementById('mensaje').textContent = '¡Rompecabezas completado!'; //si el número es 4 entonces muestra un mensaje
                 }
             });
         });
